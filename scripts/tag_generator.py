@@ -13,14 +13,14 @@ class TagGenerator():
         "Size": lambda self: f"{self.p.width}x{self.p.height}",
         "Model hash": lambda self: getattr(self.p, 'sd_model_hash', None if not shared.opts.add_model_hash_to_info or not shared.sd_model.sd_model_hash else shared.sd_model.sd_model_hash),
         "Model": lambda self: (None if not shared.opts.add_model_name_to_info or not shared.sd_model.sd_checkpoint_info.model_name else shared.sd_model.sd_checkpoint_info.model_name.replace(',', '').replace(':', '')),
-        "Hypernet": lambda self: (None if shared.loaded_hypernetwork is None else shared.loaded_hypernetwork.name),
-        "Hypernet strength": lambda self: (None if shared.loaded_hypernetwork is None or shared.opts.sd_hypernetwork_strength >= 1 else shared.opts.sd_hypernetwork_strength),
+        "Hypernet": lambda self: (None if getattr(shared, 'loaded_hypernetwork', None) is None else getattr(shared.loaded_hypernetwork, 'name', None)),
+        "Hypernet strength": lambda self: (None if getattr(shared, 'loaded_hypernetwork', None) is None or shared.opts.sd_hypernetwork_strength >= 1 else shared.opts.sd_hypernetwork_strength),
         "Variation seed": lambda self: (None if self.p.subseed_strength == 0 else self.p.seed),
         "Variation seed strength": lambda self: (None if self.p.subseed_strength == 0 else self.p.subseed_strength),
         "Seed resize from": lambda self: (None if self.p.seed_resize_from_w == 0 or self.p.seed_resize_from_h == 0 else f"{self.p.seed_resize_from_w}x{self.p.seed_resize_from_h}"),
         "Denoising strength": lambda self: getattr(self.p, 'denoising_strength', None),
         "Conditional mask weight": lambda self: getattr(self.p, "inpainting_mask_weight", shared.opts.inpainting_mask_weight) if self.p.is_using_inpainting_conditioning else None,
-        "Eta": lambda self: (None if self.p.sampler is None or self.p.sampler.eta == self.p.sampler.default_eta else self.p.sampler.eta),
+        "Eta": lambda self: (None if self.p.sampler is None or self.p.sampler.eta == getattr(self.p.sampler, 'default_eta', None) else self.p.sampler.eta),
         "Clip skip": lambda self: None if getattr(self.p, 'clip_skip', shared.opts.CLIP_stop_at_last_layers) <= 1 else getattr(self.p, 'clip_skip', shared.opts.CLIP_stop_at_last_layers),
         "ENSD": lambda self: None if shared.opts.eta_noise_seed_delta == 0 else shared.opts.eta_noise_seed_delta
         }
